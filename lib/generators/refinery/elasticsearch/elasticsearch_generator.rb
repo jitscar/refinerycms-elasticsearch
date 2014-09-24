@@ -7,7 +7,7 @@ module Refinery
   
       def generate_elasticsearch_initializer
         template "config/initializers/refinery/elasticsearch.rb.erb",
-                 File.join(destination_root, "config", "initializers", "refinery", "elasticsearch.rb")
+                 File.join(destination_root, "config", "initializers", "refinegery", "elasticsearch.rb")
       end
   
       def append_load_seed_data
