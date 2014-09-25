@@ -13,8 +13,10 @@ module Refinery
     require 'refinery/elasticsearch/configuration'
 
     class << self
+      include ActiveSupport::Inflector
+
       def index_name
-        @index_name ||= ::Refinery::Core.config.site_name.to_slug.normalize.to_s
+        @index_name ||= transliterate(::Refinery::Core.config.site_name.to_slug.normalize.to_s)
       end
 
       def root
