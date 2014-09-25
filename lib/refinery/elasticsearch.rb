@@ -1,9 +1,11 @@
+require 'refinerycms-core'
 require 'elasticsearch'
 require 'refinery/elasticsearch/version'
 require 'refinery/elasticsearch/result'
 require 'refinery/elasticsearch/results'
 
 module Refinery
+
   autoload :ElasticsearchGenerator, ' generators/refinery/elasticsearch/elasticsearch_generator'
 
   module Elasticsearch
