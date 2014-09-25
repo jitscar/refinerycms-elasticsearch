@@ -1,11 +1,11 @@
 module Refinery
   class ElasticsearchGenerator < Rails::Generators::Base
 
-    source_root File.expand_path('./templates', __FILE__)
+    source_root File.expand_path('../templates', __FILE__)
 
     def generate_elasticsearch_initializer
       template "config/initializers/refinery/elasticsearch.rb.erb",
-               File.join(destination_root, "config", "initializers", "refinery", "elasticsearch.rb")
+               File.join(destination_root, "config", "initializers", "refinegery", "elasticsearch.rb")
     end
 
     def append_load_seed_data
