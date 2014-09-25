@@ -105,22 +105,30 @@ module Refinery
           log :debug, "Created index #{index_name}"
         end
 
-        # # Update settings
+        # Update settings
         # client.indices.close index:index_name
         # client.indices.put_settings index:index_name, body:{
         #   analysis: {
         #     analyzer: {
         #       default: {
-        #         type:'standard'
-        #       }
-        #       index_analyzer: {
+        #         type:'standard',
         #         tokenizer: 'standard',
-        #         filter: %w{standard lowercase stop}
-        #       },
-        #       search_analyzer: {
-        #         tokenizer: 'standard',
-        #         filter: %w{standard lowercase stop}
+        #         filter: ['lowercase', 'russian_morphology', 'english_morphology']
         #       }
+        #       # index_analyzer: {
+        #       #   tokenizer: 'standard',
+        #       #   filter: %w{standard lowercase stop}
+        #       # },
+        #       # search_analyzer: {
+        #       #   tokenizer: 'standard',
+        #       #   filter: %w{standard lowercase stop}
+        #       # }
+        #     },
+        #     filter: {
+        #         ru_stemming: {
+        #             type: 'snowball',
+        #             language: 'Russian',
+        #         }
         #     }
         #   }
         # }

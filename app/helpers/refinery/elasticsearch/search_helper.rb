@@ -9,9 +9,6 @@ module Refinery
         icon = case result.klass.name
         when 'Refinery::Image' then 'photo'
         when 'Refinery::Resource' then 'save'
-        when 'Refinery::Eninet::Member' then 'torso'
-        when 'Refinery::Eninet::Organization' then 'torsos-all'
-        when 'Refinery::Eninet::Publication' then 'book'
         else 'page'
         end
         "<i class=\"fi-#{icon}\"></i>".html_safe
