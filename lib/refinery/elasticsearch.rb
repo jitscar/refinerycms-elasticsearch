@@ -1,4 +1,5 @@
 require 'refinerycms-core'
+require 'acts_as_indexed'
 require 'elasticsearch'
 require 'refinery/elasticsearch/version'
 require 'refinery/elasticsearch/result'
