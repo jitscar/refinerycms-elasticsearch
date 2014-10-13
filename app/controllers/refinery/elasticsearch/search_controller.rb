@@ -5,7 +5,7 @@ module Refinery
       # Display search results given the query supplied
       def show
         @query = sanitize_query(params[:q])
-        @results = Elasticsearch.search(@query, page:(params[:page] || '1').to_i)
+        @results = Elasticsearch.search(@query, per_page:(params[:per_page] || '10').to_i, page:(params[:page] || '1').to_i)
       rescue Faraday::ConnectionFailed
         flash[:alert] = 'Search engine is unavailable, please try again later'
       ensure
@@ -29,7 +29,6 @@ module Refinery
         # Escape odd quotes
         quote_count = str.count '"'
         str = str.gsub(/(.*)"(.*)/, '\1\"\3') if quote_count % 2 == 1
-
         str
       end
 
