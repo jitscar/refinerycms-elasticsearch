@@ -33,7 +33,7 @@ module Refinery
       end
 
       def total_pages
-        page_size>total ? 1 : (total / page_size) + 1
+        page_size > total ? 1 : (total / page_size.to_f).ceil
       end
 
       def current_page
