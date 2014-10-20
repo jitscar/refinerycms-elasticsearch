@@ -106,34 +106,30 @@ module Refinery
         end
 
         # Update settings
-        # client.indices.close index:index_name
-        # client.indices.put_settings index:index_name, body:{
-        #   analysis: {
-        #     analyzer: {
-        #       default: {
-        #         type:'standard',
-        #         tokenizer: 'standard',
-        #         filter: ['lowercase', 'russian_morphology', 'english_morphology']
-        #       }
-        #       # index_analyzer: {
-        #       #   tokenizer: 'standard',
-        #       #   filter: %w{standard lowercase stop}
-        #       # },
-        #       # search_analyzer: {
-        #       #   tokenizer: 'standard',
-        #       #   filter: %w{standard lowercase stop}
-        #       # }
-        #     },
-        #     filter: {
-        #         ru_stemming: {
-        #             type: 'snowball',
-        #             language: 'Russian',
-        #         }
-        #     }
-        #   }
-        # }
-        # client.indices.open index:index_name
-        # log :debug, "Updated settings for index #{index_name}"
+        client.indices.close index:index_name
+        client.indices.put_settings index:index_name, body:{
+            analysis: {
+                analyzer: {
+                    default: {
+                        type:'custom',
+                        tokenizer: 'standard',
+                        filter: %w(lowercase english_morphology russian_morphology en_stopwords ru_stopwords)
+                    }
+                },
+                filter: {
+                    en_stopwords: {
+                        type: 'stop',
+                        stopwords: '_english_',
+                    },
+                    ru_stopwords: {
+                        type: 'stop',
+                        stopwords: '_russian_',
+                    },
+                }
+            }
+        }
+        client.indices.open index:index_name
+        log :debug, "Updated settings for index #{index_name}"
 
         # Update mappings
         mappings = {}
