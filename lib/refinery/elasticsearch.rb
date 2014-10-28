@@ -24,12 +24,12 @@ module Refinery
       end
 
       def features(what=nil)
-        @features ||= with_client{|client| Hashie::Mash.new client.nodes.info }
+        @features ||= with_client { |client| Hashie::Mash.new client.nodes.info }
         case what
-        when :plugins then
-          @features.nodes.map do |node_name, info|
-            info.plugins.map(&:name)
-          end
+          when :plugins then
+            @features.nodes.map do |node_name, info|
+              info.plugins.map(&:name)
+            end
         end
       end
 
@@ -48,44 +48,44 @@ module Refinery
       end
 
       def search(query, opts={})
-        opts = opts.reverse_merge page:1, per_page:10
+        opts = opts.reverse_merge page: 1, per_page: 10
         results = with_client do |client|
           body = {
-            query:{},
-            highlight: {
-              fields: {
-                '*' => {}
+              query: {},
+              highlight: {
+                  fields: {
+                      '*' => {}
+                  }
               }
-            }
           }
           if f = search_filter
             # filtered_query
             body[:query][:filtered] = {
-              query: {
-                query_string: {
-                  default_field:'_all',
-                  query: query
-                }
-              },
-              filter:f
+                query: {
+                    query_string: {
+                        default_field: '_all',
+                        query: query
+                    }
+                },
+                filter: f
             }
           else
             body[:query] = {
-              query_string: {
-                default_field:'_all',
-                query: query
-              }
+                query_string: {
+                    default_field: '_all',
+                    query: query
+                }
             }
           end
           log :debug, "Query body: #{body}"
           client.search(
-            index:index_name,
-            from:((opts[:page]-1) * opts[:per_page]),
-            size:opts[:per_page],
-            body:body
+              index: index_name,
+              from: ((opts[:page]-1) * opts[:per_page]),
+              size: opts[:per_page],
+              body: body
           )
         end
-        Results.new results, page:opts[:page], page_size:opts[:per_page]
+        Results.new results, page: opts[:page], page_size: opts[:per_page]
       end
 
       def delete_index
@@ -95,23 +95,26 @@ module Refinery
 
       def setup_index(opts={})
         log :info, "Setting up index #{index_name}"
-        opts = {delete_first:false}.merge(opts)
+        opts = {delete_first: false}.merge(opts)
         if opts[:delete_first]
           delete_index if client.indices.exists index: index_name
         end
         unless client.indices.exists index: index_name
           client.indices.create index: index_name
-          client.indices.open index:index_name
+          client.indices.put_settings index: index_name, body: {
+              number_of_replicas: 0
+          }
+          client.indices.open index: index_name
           log :debug, "Created index #{index_name}"
         end
 
         # Update settings
-        client.indices.close index:index_name
-        client.indices.put_settings index:index_name, body:{
+        client.indices.close index: index_name
+        client.indices.put_settings index: index_name, body: {
             analysis: {
                 analyzer: {
                     default: {
-                        type:'custom',
+                        type: 'custom',
                         tokenizer: 'standard',
                         filter: %w(lowercase english_morphology russian_morphology en_stopwords ru_stopwords)
                     }
@@ -128,7 +131,7 @@ module Refinery
                 }
             }
         }
-        client.indices.open index:index_name
+        client.indices.open index: index_name
         log :debug, "Updated settings for index #{index_name}"
 
         # Update mappings
@@ -141,7 +144,7 @@ module Refinery
         mappings.each do |name, maps|
           h = Hash.new
           h[name] = maps
-          client.indices.put_mapping index: index_name, type:name, body:h
+          client.indices.put_mapping index: index_name, type: name, body: h
           log :debug, "Updated mapping for type #{index_name}:#{name}"
         end
 
@@ -166,10 +169,10 @@ module Refinery
       def client
         @client ||= begin
           opts = {
-            host:  self.es_host,
-            port:  self.es_port,
-            log:   false,
-            trace: false
+              host: self.es_host,
+              port: self.es_port,
+              log: false,
+              trace: false
           }
           if self.es_log
             opts[:logger] = self.es_logger
