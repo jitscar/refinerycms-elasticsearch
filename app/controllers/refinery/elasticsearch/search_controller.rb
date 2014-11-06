@@ -5,7 +5,7 @@ module Refinery
       # Display search results given the query supplied
       def show
         @query = sanitize_query(params[:q])
-        @results = Elasticsearch.search(@query, per_page:(params[:per_page] || '10').to_i, page:(params[:page] || '1').to_i)
+        @results = Elasticsearch.search(@query, per_page: (params[:per_page] || '10').to_i, page: (params[:page] || '1').to_i)
       rescue Faraday::ConnectionFailed
         flash[:alert] = 'Search engine is unavailable, please try again later'
       ensure
@@ -22,7 +22,7 @@ module Refinery
         # AND, OR and NOT are used by lucene as logical operators. We need
         # to escape them
         ['AND', 'OR', 'NOT'].each do |word|
-          escaped_word = word.split('').map {|char| "\\#{char}" }.join('')
+          escaped_word = word.split('').map { |char| "\\#{char}" }.join('')
           str = str.gsub(/\s*\b(#{word.upcase})\b\s*/, " #{escaped_word} ")
         end
 
