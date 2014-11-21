@@ -1,3 +1,4 @@
+=begin
 begin
   Refinery::Resource.class_eval do
     include ::Refinery::Elasticsearch::Searchable
@@ -23,3 +24,4 @@ begin
   end
 rescue NameError
 end
+=end
