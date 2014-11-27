@@ -16,7 +16,12 @@ module Refinery
       def sanitize_query(str)
         # Escape special characters
         # http://lucene.apache.org/core/old_versioned_docs/versions/2_9_1/queryparsersyntax.html#Escaping Special Characters
-        escaped_characters = Regexp.escape('\\+-&|!(){}[]^~*?:')
+        escaped_characters = Regexp.escape('\\/+-&|!(){}[]^~*?:')
+        str.sub!(/https\:\/\//, '') if str.include? "https://"
+        str.sub!(/http\:\/\//, '') if str.include? "http://"
+        str.sub!(/https\:\/\/www./, '') if str.include? "https://www."
+        str.sub!(/http\:\/\/www./, '') if str.include? "http://www."
+        str.sub!(/www./, '') if str.include? "www."
         str = str.gsub(/([#{escaped_characters}])/, '') # Paste it instead 2nd param if smth. wrong: \\\\\1
 
         # AND, OR and NOT are used by lucene as logical operators. We need
@@ -29,6 +34,7 @@ module Refinery
         # Escape odd quotes
         quote_count = str.count '"'
         str = str.gsub(/(.*)"(.*)/, '\1\"\3') if quote_count % 2 == 1
+        # str = str.gsub(/\//, '\/')
         str
       end
 
