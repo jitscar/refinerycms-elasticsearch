@@ -18,9 +18,9 @@ module Refinery
         # http://lucene.apache.org/core/old_versioned_docs/versions/2_9_1/queryparsersyntax.html#Escaping Special Characters
         escaped_characters = Regexp.escape('\\/+-&|!(){}[]^~*?:')
         str.sub!(/https\:\/\//, '') if str.include? "https://"
+        str.sub!(/https\/\//, '') if str.include? "https//"
         str.sub!(/http\:\/\//, '') if str.include? "http://"
-        str.sub!(/https\:\/\/www./, '') if str.include? "https://www."
-        str.sub!(/http\:\/\/www./, '') if str.include? "http://www."
+        str.sub!(/http\/\//, '') if str.include? "http//"
         str.sub!(/www./, '') if str.include? "www."
         str = str.gsub(/([#{escaped_characters}])/, '') # Paste it instead 2nd param if smth. wrong: \\\\\1
 
