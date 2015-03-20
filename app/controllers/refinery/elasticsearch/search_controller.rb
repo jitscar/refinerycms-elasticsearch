@@ -6,8 +6,9 @@ module Refinery
       def show
         @query = sanitize_query(params[:q])
         @results = Elasticsearch.search(@query, per_page: (params[:per_page] || '10').to_i, page: (params[:page] || '1').to_i)
-      rescue Faraday::ConnectionFailed
-        flash[:alert] = 'Search engine is unavailable, please try again later'
+      rescue Faraday::ConnectionFailed,
+             ::Elasticsearch::Transport::Transport::Errors::ServiceUnavailable
+        flash[:alert] = ::I18n.t('refinery.elasticsearch.search.error.unavailable')
       ensure
         @results ||= Results.new
         present(@page = Refinery::Page.find_by_link_url("/search"))

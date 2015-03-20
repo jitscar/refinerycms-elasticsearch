@@ -1,0 +1,6 @@
+ru:
+  refinery:
+    elasticsearch:
+      search:
+        error:
+          unavailable: "В данный момент поиск недоступен. Пожалуйста, попробуйте позже."
